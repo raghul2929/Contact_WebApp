@@ -9,11 +9,15 @@ router.get('/addcontacts',(req, res)=>{
     res.render('contact/addcontact')
 
 })
-router.post('/addcontacts',async (req, res)=>{
-    await cnt_schema.create(req.body)
-    console.log(req.body)
-    res.redirect('/home',302,{})
-
+router.post('/addcontacts', async (req, res) => {
+    try {
+        await cnt_schema.create(req.body);
+        console.log('Contact created:', req.body);
+        res.redirect('/home', 302);
+    } catch (error) {
+        console.error('Error in /addcontacts POST route:', error);
+        res.status(500).send('Internal Server Err');
+    }
 });
 router.get('/allcontact', async (req, res) => {
     let data = await cnt_schema.find({}).lean()
